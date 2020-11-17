@@ -5,8 +5,6 @@ import altair as alt
 import pydeck as pdk
 from PIL import Image
 import os
-import sys
-sys.path.insert(1, "../.")
 from fp_insights import main as fp_ins
 
 
