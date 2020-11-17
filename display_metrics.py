@@ -16,9 +16,8 @@ st.set_page_config(
     )
 
 @st.cache(persist=True)
-def calculate_data(groundtruths, predictions):
-    gt_df = pd.read_csv(groundtruths)
-    pr_df = pd.read_csv(predictions)
+def calculate_data(gt_df, pr_df):
+
     # del gt_df["Unnamed: 0"]
     # del pr_df["Unnamed: 0"]
     tp_df, fp_df, missing_df, extra_df = fp_ins(gt_df, pr_df)
@@ -28,13 +27,17 @@ def calculate_data(groundtruths, predictions):
 
 def read_files():
     st.title("Select the Required Files")
+    pr_df, gt_df = None, None
     col1, col2 = st.beta_columns([3, 3])
     gt_container = col1.empty()
     pr_container = col2.empty()
     groundtruths = gt_container.file_uploader("Choose Ground Truth CSV", type="csv")
     predictions = pr_container.file_uploader("Choose Prediction CSV", type="csv")
 
-    return groundtruths, predictions, gt_container, pr_container
+    gt_df = pd.read_csv(groundtruths)
+    pr_df = pd.read_csv(predictions)
+
+    return gt_df, pr_df, gt_container, pr_container
 
 def get_dfname():
     st.sidebar.title("Select Data to Display")
@@ -197,12 +200,12 @@ def run_app(tp, fp, missing_df, extra_df):
 def main():
     program_exec = False
     if program_exec == False:
-        groundtruths, predictions, gt_container, pr_container = read_files()
+        gt_df, pr_df, gt_container, pr_container = read_files()
         program_exec = True
-    if groundtruths != None and predictions != None: 
+    if gt_df != None and pr_df != None: 
         gt_container.empty()
         pr_container.empty()
-        tp_df, fp_df, missing_df, extra_df = calculate_data(groundtruths, predictions)
+        tp_df, fp_df, missing_df, extra_df = calculate_data(gt_df, pr_df)
         run_app(tp_df, fp_df, missing_df, extra_df)
     
     # uploaded_file = st.file_uploader("Choose a CSV file")
