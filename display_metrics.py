@@ -42,6 +42,8 @@ def calculate_data(groundtruths, predictions):
 
     gt_df = pd.read_csv(groundtruths)
     pr_df = pd.read_csv(predictions)
+    st.write(gt_df)
+    st.write(pr_df)
     tp_df, fp_df, missing_df, extra_df = fp_ins(gt_df, pr_df)
 
     return tp_df, fp_df, missing_df, extra_df
