@@ -71,7 +71,6 @@ def main(gt_dataframe, pr_dataframe):
         gt_df = gt_dataframe.loc[(gt_dataframe["class"] == _class)]
         #pr = pr_dataframe.loc[(pr_dataframe["class"] == _class)]
         filenames = gt_df['filename'].unique()
-        st.write(gt_df)
         for filename in filenames:
             gt = gt_df.loc[(gt_df['filename'] == filename)]
             pr = pr_dataframe.loc[(pr_dataframe["filename"] == filename)]
@@ -86,6 +85,7 @@ def main(gt_dataframe, pr_dataframe):
                 max_value = max(iou_list)
                 if max_value > score_th:
                     index = indexes[iou_list.index(max_value)]
+                    st.write("here")
                     df = df.append({'filename':filename,'gt_class':gt['class'][index],'pr_class':pr['class'][index],
                         'gt_bbox': gt['gt_bbox'][index], 'pr_bbox':pr['pr_bbox'][index]},ignore_index=True)
                     # print (index)
