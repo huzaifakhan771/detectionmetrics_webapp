@@ -85,12 +85,15 @@ def main(gt_dataframe, pr_dataframe):
                 max_value = max(iou_list)
                 if max_value > score_th:
                     index = indexes[iou_list.index(max_value)]
+                    st.write("line 88")
                     df = df.append({'filename':filename,'gt_class':gt['class'][index],'pr_class':pr['class'][index],
                         'gt_bbox': gt['gt_bbox'][index], 'pr_bbox':pr['pr_bbox'][index]},ignore_index=True)
                     # print (index)
                     # print (ext)
                     # print (index)
+                    st.write("line 94")
                     extra_df = extra_df.drop([index])
+                st.write("line 96")
                 else:
                     print ('--------- missing --------------')
                     missing_df = missing_df.append({'filename':filename,'gt_class':gt['class'][gt_index],'gt_bbox': gt['gt_bbox'][gt_index]},ignore_index=True)
