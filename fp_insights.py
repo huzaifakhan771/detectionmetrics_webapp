@@ -51,8 +51,6 @@ def _getArea(box):
 def main(gt_dataframe, pr_dataframe):
     score_th = 0.20
     # pr_dataframe = pd.read_csv('inputs/detections.csv')
-    st.write(type(gt_dataframe))
-    st.write(type(pr_dataframe))
 
     gt_dataframe['gt_bbox']= gt_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
     pr_dataframe['pr_bbox']= pr_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
