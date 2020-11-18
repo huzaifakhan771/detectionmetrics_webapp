@@ -85,9 +85,9 @@ def main(gt_dataframe, pr_dataframe):
                 max_value = max(iou_list)
                 if max_value > score_th:
                     index = indexes[iou_list.index(max_value)]
-                    st.write("here")
                     df = df.append({'filename':filename,'gt_class':gt['class'][index],'pr_class':pr['class'][index],
                         'gt_bbox': gt['gt_bbox'][index], 'pr_bbox':pr['pr_bbox'][index]},ignore_index=True)
+                st.write("here")
                     # print (index)
                     # print (ext)
                     # print (index)
