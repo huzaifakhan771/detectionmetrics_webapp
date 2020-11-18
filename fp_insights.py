@@ -54,8 +54,6 @@ def main(gt_dataframe, pr_dataframe):
 
     gt_dataframe['gt_bbox']= gt_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
     pr_dataframe['pr_bbox']= pr_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
-    st.write(gt_dataframe)
-    st.write(pr_dataframe)
     
     # gt_dataframe = gt_dataframe.drop(['width','height','xmin','ymin','xmax','ymax'],axis=1)
     # pr_dataframe = pr_dataframe.drop(['width','height', 'xmin','ymin','xmax','ymax'],axis=1)
@@ -65,8 +63,6 @@ def main(gt_dataframe, pr_dataframe):
     df = pd.DataFrame(columns=['filename','gt_class','pr_class','gt_bbox','pr_bbox'])
     missing_df = pd.DataFrame(columns=['filename','gt_class','gt_bbox'])
     extra_df = pr_dataframe.copy()
-    
-    print (classes)
 
     for _class in classes:
         print (_class)
@@ -102,6 +98,8 @@ def main(gt_dataframe, pr_dataframe):
             
     tp = df.loc[df['gt_class'] == df['pr_class']]
     fp = df.loc[df['gt_class'] != df['pr_class']]
+    st.write(tp)
+    st.write(fp)
 
     return tp, fp, missing_df, extra_df
 
