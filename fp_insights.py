@@ -54,6 +54,8 @@ def main(gt_dataframe, pr_dataframe):
 
     gt_dataframe['gt_bbox']= gt_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
     pr_dataframe['pr_bbox']= pr_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
+    st.write(gt_dataframe)
+    st.write(pr_dataframe)
     
     # gt_dataframe = gt_dataframe.drop(['width','height','xmin','ymin','xmax','ymax'],axis=1)
     # pr_dataframe = pr_dataframe.drop(['width','height', 'xmin','ymin','xmax','ymax'],axis=1)
