@@ -93,12 +93,10 @@ def main(gt_dataframe, pr_dataframe):
                     # print (index)
                     st.write("line 94")
                     extra_df = extra_df.drop([index])
-                st.write("line 96")
                 else:
                     print ('--------- missing --------------')
                     missing_df = missing_df.append({'filename':filename,'gt_class':gt['class'][gt_index],'gt_bbox': gt['gt_bbox'][gt_index]},ignore_index=True)
-
-        
+                st.write("line 96")
             
     tp = df.loc[df['gt_class'] == df['pr_class']]
     fp = df.loc[df['gt_class'] != df['pr_class']]
