@@ -63,14 +63,15 @@ def main(gt_dataframe, pr_dataframe):
     df = pd.DataFrame(columns=['filename','gt_class','pr_class','gt_bbox','pr_bbox'])
     missing_df = pd.DataFrame(columns=['filename','gt_class','gt_bbox'])
     extra_df = pr_dataframe.copy()
+    st.write(missing_df)
+    st.write(extra_df)
+    st.write(df)
 
     for _class in classes:
-        print (_class)
         gt_df = gt_dataframe.loc[(gt_dataframe["class"] == _class)]
         #pr = pr_dataframe.loc[(pr_dataframe["class"] == _class)]
         filenames = gt_df['filename'].unique()
         for filename in filenames:
-            print (filename)
             gt = gt_df.loc[(gt_df['filename'] == filename)]
             pr = pr_dataframe.loc[(pr_dataframe["filename"] == filename)]
             indexes = pr.index
@@ -98,8 +99,6 @@ def main(gt_dataframe, pr_dataframe):
             
     tp = df.loc[df['gt_class'] == df['pr_class']]
     fp = df.loc[df['gt_class'] != df['pr_class']]
-    st.write(tp)
-    st.write(fp)
 
     return tp, fp, missing_df, extra_df
 
