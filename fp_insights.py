@@ -56,22 +56,22 @@ def main(gt_dataframe, pr_dataframe):
     pr_dataframe['pr_bbox']= pr_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
     
     gt_dataframe = gt_dataframe.drop(['width','height','xmin','ymin','xmax','ymax'],axis=1)
-    try:
-        pr_dataframe = pr_dataframe.drop(['score', 'xmin','ymin','xmax','ymax'],axis=1)
-    except:
-        pr_dataframe = pr_dataframe.drop(['width', 'height', 'xmin','ymin','xmax','ymax'],axis=1)
-    
+    pr_dataframe = pr_dataframe.drop(['width','height', 'xmin','ymin','xmax','ymax'],axis=1)
+
     classes = gt_dataframe['class'].unique()
     
     df = pd.DataFrame(columns=['filename','gt_class','pr_class','gt_bbox','pr_bbox'])
     missing_df = pd.DataFrame(columns=['filename','gt_class','gt_bbox'])
     extra_df = pr_dataframe.copy()
+    
 
     for _class in classes:
+        print (_class)
         gt_df = gt_dataframe.loc[(gt_dataframe["class"] == _class)]
         #pr = pr_dataframe.loc[(pr_dataframe["class"] == _class)]
         filenames = gt_df['filename'].unique()
         for filename in filenames:
+            print (filename)
             gt = gt_df.loc[(gt_df['filename'] == filename)]
             pr = pr_dataframe.loc[(pr_dataframe["filename"] == filename)]
             indexes = pr.index
@@ -85,7 +85,8 @@ def main(gt_dataframe, pr_dataframe):
                 max_value = max(iou_list)
                 if max_value > score_th:
                     index = indexes[iou_list.index(max_value)]
-                    # df = df.append({'filename':filename,'gt_class':gt['class'][index],'pr_class':pr['class'][index], 'gt_bbox': gt['gt_bbox'][index], 'pr_bbox':pr['pr_bbox'][index]},ignore_index=True)
+                    df = df.append({'filename':filename,'gt_class':gt['class'][index],'pr_class':pr['class'][index],
+                        'gt_bbox': gt['gt_bbox'][index], 'pr_bbox':pr['pr_bbox'][index]},ignore_index=True)
                     # print (index)
                     # print (ext)
                     # print (index)
