@@ -8,6 +8,7 @@ import os
 from fp_insights import main as fp_ins
 
 
+# Set web page's parameters
 st.set_page_config(
     page_title="Evalutation Metrics",
     page_icon=":shark:",
@@ -15,35 +16,47 @@ st.set_page_config(
     initial_sidebar_state="expanded",
     )
 
-@st.cache(persist=True)
-def calculate_data(gt_df, pr_df):
-
-    # del gt_df["Unnamed: 0"]
-    # del pr_df["Unnamed: 0"]
-    tp_df, fp_df, missing_df, extra_df = fp_ins(gt_df, pr_df)
-
-    return tp_df, fp_df, missing_df, extra_df
-
-
 def read_files():
+    """ Create two buttons on the Webpage to open a file dialogue
+    that can be used to read the Ground Truths and Prediction files from 
+    the user's Computer. This function then returns those files and
+    are used in calculate_data function """
+
     st.title("Select the Required Files")
-    pr_df, gt_df = None, None
-    col1, col2 = st.beta_columns([3, 3])
+    # gt_df, pr_df = None, None
+    col1, col2 = st.beta_columns([3, 3])  # Create a container with two columns
     gt_container = col1.empty()
     pr_container = col2.empty()
     groundtruths = gt_container.file_uploader("Choose Ground Truth CSV", type="csv")
     predictions = pr_container.file_uploader("Choose Prediction CSV", type="csv")
 
+    return groundtruths, predictions, gt_container, pr_container
+
+
+@st.cache(persist=True)
+def calculate_data(groundtruths, predictions):
+    """ Read the ground truth and prediction CSVs with Pandas
+    and use them in the main() function (declared as fp_ins)
+    to calculate True Positives, False Positives, Missing Detections
+    and Extra Detections """
+
     gt_df = pd.read_csv(groundtruths)
     pr_df = pd.read_csv(predictions)
+    tp_df, fp_df, missing_df, extra_df = fp_ins(gt_df, pr_df)
 
-    return gt_df, pr_df, gt_container, pr_container
+    return tp_df, fp_df, missing_df, extra_df
+
+
 
 def get_dfname():
+    """ Creates a sidebar selectbox where the user can choose
+    which dataframe to display on the webpage"""
+
     st.sidebar.title("Select Data to Display")
     files = ["True Positive", "False Positive", "Missing Detections", "Extra Detections"]
     dfname = st.sidebar.selectbox("Choose a dataframe", files)
     return dfname
+
 
 def get_tp_df(tp):
   
@@ -127,7 +140,6 @@ def get_missing_df(missing_df):
 
 def get_extra_df(extra_df):
     st.sidebar.title("Select a Class Label")
-    print(extra_df)
     classes = ["all_ground_truths"] + list(extra_df['class'].unique())
     class_ = st.sidebar.selectbox("Choose a class", classes)
 
@@ -170,7 +182,8 @@ def run_app(tp, fp, missing_df, extra_df):
 
     col1.write(df)
     show_image = st.sidebar.checkbox("Check to display image", False)
-    if show_image:
+    
+    if show_image:      
         img_resize = st.sidebar.slider("Resize Image", min_value=1, max_value=10, value=9, step=1)
         if img_resize > 5:
             img_resize = (10 % img_resize) + 1
@@ -200,49 +213,13 @@ def run_app(tp, fp, missing_df, extra_df):
 def main():
     program_exec = False
     if program_exec == False:
-        gt_df, pr_df, gt_container, pr_container = read_files()
+        groundtruths, predictions, gt_container, pr_container = read_files()
         program_exec = True
-    if gt_df != None and pr_df != None: 
+    if groundtruths != None and predictions != None: 
         gt_container.empty()
         pr_container.empty()
-        tp_df, fp_df, missing_df, extra_df = calculate_data(gt_df, pr_df)
+        tp_df, fp_df, missing_df, extra_df = calculate_data(groundtruths, predictions)
         run_app(tp_df, fp_df, missing_df, extra_df)
-    
-    # uploaded_file = st.file_uploader("Choose a CSV file")
-    # if uploaded_file is not None:
-    #     df = pd.read_csv(uploaded_file)
-    #     del df["Unnamed: 0"] 
-    #     st.write(df)
-    # if uploaded_file is not None:
-        # bytes_data = uploaded_file.read()
-        # st.write(bytes_data)
-
-        # To convert to a string based IO:
-        # stringio = StringIO(uploaded_file.decode("utf-8"))
-        # st.write(stringio)
-
-        # To read file as string:
-        # string_data = stringio.read()
-        # st.write(string_data)
-    # else: 
-        # uploaded_file.seek(0)
-        
-
-#     st.text_area('Text to analyze', '''
-# ...     It was the best of times, it was the worst of times, it was
-# ...     the age of wisdom, it was the age of foolishness, it was
-# ...     the epoch of belief, it was the epoch of incredulity, it
-# ...     was the season of Light, it was the season of Darkness, it
-# ...     was the spring of hope, it was the winter of despair, (...)
-# ...     ''')
-
-    # if st.button("Upload Image"):
-        # st.write("please select an image")
-
-    # options = st.multiselect('What are your favorite colors',['Green', 'Yellow', 'Red', 'Blue'],['Yellow', 'Red'])
-    
-    # img_name = st.sidebar.text_input("Enter the image name", "img_2e99.jpg")
-    # st.write(img_name)
 
 if __name__ == '__main__':
     main()
