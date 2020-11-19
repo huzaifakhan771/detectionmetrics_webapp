@@ -56,7 +56,11 @@ def main(gt_dataframe, pr_dataframe):
     pr_dataframe['pr_bbox']= pr_dataframe[['xmin','ymin','xmax','ymax']].values.tolist()
     
     gt_dataframe = gt_dataframe.drop(['width','height','xmin','ymin','xmax','ymax'],axis=1)
-    pr_dataframe = pr_dataframe.drop(['score', 'xmin','ymin','xmax','ymax'],axis=1)
+    try:
+        pr_dataframe = pr_dataframe.drop(['score', 'xmin','ymin','xmax','ymax'],axis=1)
+    except:
+        pr_dataframe = pr_dataframe.drop(['width', 'height','ymin','xmax','ymax'],axis=1)
+
 
     classes = gt_dataframe['class'].unique()
     
